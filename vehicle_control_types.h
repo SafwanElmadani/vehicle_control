@@ -7,9 +7,9 @@
 //
 // Code generated for Simulink model 'vehicle_control'.
 //
-// Model version                  : 1.37
+// Model version                  : 1.40
 // Simulink Coder version         : 9.4 (R2020b) 29-Jul-2020
-// C/C++ source code generated on : Tue Feb  9 22:04:49 2021
+// C/C++ source code generated on : Wed Feb 10 12:57:37 2021
 //
 // Target selection: ert.tlc
 // Embedded hardware selection: Generic->Unspecified (assume 32-bit Generic)

@@ -7,9 +7,9 @@
 //
 // Code generated for Simulink model 'vehicle_control'.
 //
-// Model version                  : 1.37
+// Model version                  : 1.40
 // Simulink Coder version         : 9.4 (R2020b) 29-Jul-2020
-// C/C++ source code generated on : Tue Feb  9 22:04:49 2021
+// C/C++ source code generated on : Wed Feb 10 12:57:37 2021
 //
 // Target selection: ert.tlc
 // Embedded hardware selection: Generic->Unspecified (assume 32-bit Generic)
@@ -119,12 +119,12 @@ void vehicle_control_step(void)
       if (vehicle_control_DW.temporalCounter_i1 >= 300U) {
         vehicle_control_DW.is_c3_vehicle_control = vehicle_control_IN_speed_up2;
         vehicle_control_DW.temporalCounter_i1 = 0U;
-        vehicle_control_B.accel = 2.0;
+        vehicle_control_B.accel = 1.5;
       }
       break;
 
      case vehicle_control_IN_speed_up1:
-      vehicle_control_B.accel = 1.5;
+      vehicle_control_B.accel = 1.0;
       if (vehicle_control_DW.temporalCounter_i1 >= 300U) {
         vehicle_control_DW.is_c3_vehicle_control = vehicle_control_IN_slow_down1;
         vehicle_control_DW.temporalCounter_i1 = 0U;
@@ -133,7 +133,7 @@ void vehicle_control_step(void)
       break;
 
      case vehicle_control_IN_speed_up2:
-      vehicle_control_B.accel = 2.0;
+      vehicle_control_B.accel = 1.5;
       if (vehicle_control_DW.temporalCounter_i1 >= 300U) {
         vehicle_control_DW.is_c3_vehicle_control = vehicle_control_IN_s2;
         vehicle_control_B.accel = 0.0;
@@ -152,7 +152,7 @@ void vehicle_control_step(void)
        case 1:
         vehicle_control_DW.is_c3_vehicle_control = vehicle_control_IN_speed_up1;
         vehicle_control_DW.temporalCounter_i1 = 0U;
-        vehicle_control_B.accel = 1.5;
+        vehicle_control_B.accel = 1.0;
         break;
       }
       break;
