@@ -7,9 +7,9 @@
 //
 // Code generated for Simulink model 'vehicle_control'.
 //
-// Model version                  : 1.40
+// Model version                  : 1.43
 // Simulink Coder version         : 9.4 (R2020b) 29-Jul-2020
-// C/C++ source code generated on : Wed Feb 10 12:57:37 2021
+// C/C++ source code generated on : Fri Feb 26 12:05:48 2021
 //
 // Target selection: ert.tlc
 // Embedded hardware selection: Generic->Unspecified (assume 32-bit Generic)
@@ -20,14 +20,16 @@
 #include "vehicle_control_private.h"
 
 // Named constants for Chart: '<Root>/Chart'
-const uint8_T vehicle_control_IN_decelerate = 1U;
-const uint8_T vehicle_control_IN_idle = 2U;
-const uint8_T vehicle_control_IN_s1 = 3U;
-const uint8_T vehicle_control_IN_s2 = 4U;
-const uint8_T vehicle_control_IN_slow_down1 = 5U;
-const uint8_T vehicle_control_IN_speed_up1 = 6U;
-const uint8_T vehicle_control_IN_speed_up2 = 7U;
-const uint8_T vehicle_control_IN_wait = 8U;
+const uint8_T vehicle_control_IN_S4 = 1U;
+const uint8_T vehicle_control_IN_S5 = 2U;
+const uint8_T vehicle_control_IN_decelerate = 3U;
+const uint8_T vehicle_control_IN_idle = 4U;
+const uint8_T vehicle_control_IN_s1 = 5U;
+const uint8_T vehicle_control_IN_s2 = 6U;
+const uint8_T vehicle_control_IN_slow_down1 = 7U;
+const uint8_T vehicle_control_IN_speed_up1 = 8U;
+const uint8_T vehicle_control_IN_speed_up2 = 9U;
+const uint8_T vehicle_control_IN_wait = 10U;
 
 // Block signals (default storage)
 B_vehicle_control_T vehicle_control_B;
@@ -72,9 +74,27 @@ void vehicle_control_step(void)
   if (vehicle_control_DW.is_active_c3_vehicle_control == 0U) {
     vehicle_control_DW.is_active_c3_vehicle_control = 1U;
     vehicle_control_DW.is_c3_vehicle_control = vehicle_control_IN_idle;
+    vehicle_control_DW.temporalCounter_i1 = 0U;
     vehicle_control_B.accel = 0.0;
   } else {
     switch (vehicle_control_DW.is_c3_vehicle_control) {
+     case vehicle_control_IN_S4:
+      vehicle_control_B.accel = -1.0;
+      if (vehicle_control_DW.temporalCounter_i1 >= 300U) {
+        vehicle_control_DW.is_c3_vehicle_control = vehicle_control_IN_s2;
+        vehicle_control_B.accel = 0.0;
+      }
+      break;
+
+     case vehicle_control_IN_S5:
+      vehicle_control_B.accel = 0.0;
+      if (vehicle_control_DW.temporalCounter_i1 >= 200U) {
+        vehicle_control_DW.is_c3_vehicle_control = vehicle_control_IN_S4;
+        vehicle_control_DW.temporalCounter_i1 = 0U;
+        vehicle_control_B.accel = -1.0;
+      }
+      break;
+
      case vehicle_control_IN_decelerate:
       vehicle_control_B.accel = -1.0;
       if (vehicle_control_DW.temporalCounter_i1 >= 300U) {
@@ -85,7 +105,9 @@ void vehicle_control_step(void)
 
      case vehicle_control_IN_idle:
       vehicle_control_B.accel = 0.0;
-      vehicle_control_DW.is_c3_vehicle_control = vehicle_control_IN_wait;
+      if (vehicle_control_DW.temporalCounter_i1 >= 500U) {
+        vehicle_control_DW.is_c3_vehicle_control = vehicle_control_IN_wait;
+      }
       break;
 
      case vehicle_control_IN_s1:
@@ -96,6 +118,7 @@ void vehicle_control_step(void)
       } else {
         if (vehicle_control_B.In1.Data != 2) {
           vehicle_control_DW.is_c3_vehicle_control = vehicle_control_IN_idle;
+          vehicle_control_DW.temporalCounter_i1 = 0U;
           vehicle_control_B.accel = 0.0;
         }
       }
@@ -105,6 +128,7 @@ void vehicle_control_step(void)
       vehicle_control_B.accel = 0.0;
       if (vehicle_control_B.In1.Data != 1) {
         vehicle_control_DW.is_c3_vehicle_control = vehicle_control_IN_idle;
+        vehicle_control_DW.temporalCounter_i1 = 0U;
         vehicle_control_B.accel = 0.0;
       } else {
         if (vehicle_control_B.In1.Data == 1) {
@@ -116,7 +140,7 @@ void vehicle_control_step(void)
 
      case vehicle_control_IN_slow_down1:
       vehicle_control_B.accel = 0.0;
-      if (vehicle_control_DW.temporalCounter_i1 >= 300U) {
+      if (vehicle_control_DW.temporalCounter_i1 >= 200U) {
         vehicle_control_DW.is_c3_vehicle_control = vehicle_control_IN_speed_up2;
         vehicle_control_DW.temporalCounter_i1 = 0U;
         vehicle_control_B.accel = 1.5;
@@ -135,7 +159,8 @@ void vehicle_control_step(void)
      case vehicle_control_IN_speed_up2:
       vehicle_control_B.accel = 1.5;
       if (vehicle_control_DW.temporalCounter_i1 >= 300U) {
-        vehicle_control_DW.is_c3_vehicle_control = vehicle_control_IN_s2;
+        vehicle_control_DW.is_c3_vehicle_control = vehicle_control_IN_S5;
+        vehicle_control_DW.temporalCounter_i1 = 0U;
         vehicle_control_B.accel = 0.0;
       }
       break;
